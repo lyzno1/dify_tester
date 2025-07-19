@@ -1,0 +1,38 @@
+{
+    "permissions": {
+      "allow": [
+        "Bash(ls:*)",
+        "Bash(find:*)",
+        "Bash(pwd:*)",
+        "Bash(cd:*)",
+        "Bash(git:*)",
+        "Bash(uv:*)",
+        "Bash(uv run:*)",
+        "Bash(uv add:*)",
+        "Bash(uv remove:*)",
+        "Bash(uv sync:*)",
+        "Bash(uv lock:*)",
+        "Bash(uv venv:*)",
+        "Bash(uv pip install:*)",
+        "Bash(cat:*)",
+        "Bash(echo:*)",
+        "Bash(grep:*)",
+        "Bash(rg:*)",
+        "Bash(date:*)",
+        "Bash(wc:*)",
+        "Bash(head:*)",
+        "Bash(tail:*)",
+        "Bash(awk:*)",
+        "Bash(sed:*)",
+        "Bash(sort:*)",
+        "Bash(uniq:*)",
+        "Bash(pnpm:*)",
+        "Bash(pnpm run:*)",
+        "Bash(pnpm add:*)",
+        "Bash(pnpm remove:*)",
+        "Bash(pnpm sync:*)"
+      ]
+    },
+    "includeCoAuthoredBy": false,
+    "enableAllProjectMcpServers": true
+  }

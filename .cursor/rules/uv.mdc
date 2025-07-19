@@ -1,0 +1,95 @@
+---
+description: Read when choosing between uv commands or migrating from pip/poetry workflows.
+alwaysApply: false
+---
+# UV Package Manager Rules and Standards
+
+## Command Classification
+
+### Project Management Commands
+- `uv init` - Initialize project with pyproject.toml
+- `uv add <package>` - Add dependency to pyproject.toml and install
+- `uv remove <package>` - Remove dependency from pyproject.toml
+- `uv sync` - Install all dependencies from lockfile
+- `uv lock` - Generate/update lockfile from pyproject.toml
+- `uv run <script>` - Execute with project environment
+
+### Compatibility Commands  
+- `uv pip install <package>` - Direct installation (no pyproject.toml modification)
+- `uv venv` - Create virtual environment manually
+
+## Core Distinctions
+
+### `uv add` vs `uv pip install`
+
+**Use `uv add`:**
+- Modifies pyproject.toml dependencies
+- Updates uv.lock automatically
+- Project-managed dependencies
+
+**Use `uv pip install`:**
+- Environment manipulation only
+- No project file modification
+- Temporary installations
+
+### File Hierarchy
+```
+pyproject.toml (source of truth)
+    ↓
+uv.lock (exact versions)
+    ↓
+.venv (installation)
+```
+
+## Essential Workflows
+
+### New Project
+```bash
+uv init myproject
+cd myproject
+uv add requests               # Production dependency  
+uv add --dev pytest          # Development dependency
+```
+
+### Dependency Management
+```bash
+uv add package               # Add production dependency
+uv add --dev package         # Add dev dependency
+uv remove package           # Remove dependency
+uv sync                     # Install from lockfile
+uv lock                     # Update lockfile only
+```
+
+### Environment Operations
+```bash
+uv run python script.py     # Run with project environment
+uv run --with requests -- python -c "import requests"  # Temporary dependency
+uv sync --dev               # Install including dev dependencies
+uv sync --no-dev            # Production-only installation
+```
+
+## Decision Matrix
+
+| Scenario | Command | Rationale |
+|----------|---------|-----------|
+| New project | `uv init` → `uv add` | Standard project workflow |
+| Add dependency | `uv add package` | Updates pyproject.toml + lockfile |
+| Install project | `uv sync` | Installs from lockfile |
+| Quick test | `uv pip install package` | Temporary, no project modification |
+| CI/CD | `uv sync --frozen` | Exact lockfile reproduction |
+| Development | `uv sync --dev` | Include dev dependencies |
+
+## Version Control
+- **COMMIT**: `pyproject.toml`, `uv.lock`
+- **IGNORE**: `.venv/`, `.python-version`
+
+## Anti-Patterns
+
+### AVOID
+- Mixing `uv add` and `uv pip install` in same project
+- Manual pyproject.toml editing without `uv lock`
+- Using `uv pip install` for project dependencies
+
+### FORBIDDEN
+- Modifying uv.lock manually
+- Ignoring pyproject.toml in version control

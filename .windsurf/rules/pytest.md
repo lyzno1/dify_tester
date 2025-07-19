@@ -1,0 +1,182 @@
+---
+trigger: model_decision
+description: Read when organizing tests, using fixtures, or configuring pytest workflows.
+globs:
+---
+# Pytest Testing Framework Rules
+
+## Command Classification
+
+### Core Commands
+- `uv run pytest` - Run all tests
+- `uv run pytest tests/` - Run specific directory
+- `uv run pytest tests/test_file.py` - Run specific file
+- `uv run pytest tests/test_file.py::test_function` - Run specific test
+
+### Workflow Commands
+- `uv run pytest -v` - Verbose output
+- `uv run pytest -x` - Stop on first failure
+- `uv run pytest --tb=short` - Short traceback format
+- `uv run pytest --cov=src` - Coverage report with pytest-cov
+
+## Project Structure
+
+### Standard Layout
+```
+├── src/
+│   └── mypackage/
+├── tests/
+│   ├── conftest.py
+│   ├── test_module1.py
+│   └── test_module2.py
+└── pyproject.toml
+```
+
+### File Naming Rules
+- Test files: `test_*.py` or `*_test.py`
+- Test functions: `test_*` 
+- Test classes: `Test*`
+
+## Configuration
+
+### Essential pyproject.toml
+```toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+]
+```
+
+## Fixtures
+
+### Basic Fixture Usage
+```python
+# conftest.py
+import pytest
+
+@pytest.fixture
+def sample_data():
+    return {"key": "value"}
+
+@pytest.fixture(scope="session")
+def database():
+    # Setup
+    db = create_database()
+    yield db
+    # Teardown
+    db.close()
+
+# test_example.py
+def test_function(sample_data):
+    assert sample_data["key"] == "value"
+```
+
+### Fixture Scopes
+- `function` - Default, per test function
+- `class` - Per test class
+- `module` - Per test module
+- `session` - Once per test session
+
+## Parametrization
+
+### Test Parametrization
+```python
+import pytest
+
+@pytest.mark.parametrize("input,expected", [
+    (1, 2),
+    (2, 3),
+    (3, 4),
+])
+def test_increment(input, expected):
+    assert input + 1 == expected
+
+@pytest.mark.parametrize("value", [1, 2, 3])
+class TestClass:
+    def test_method(self, value):
+        assert value > 0
+```
+
+## Essential Workflows
+
+### Project Setup
+```bash
+uv add --dev pytest pytest-cov
+uv run pytest --version
+uv run pytest tests/
+```
+
+### Test Execution Patterns
+```bash
+uv run pytest                    # All tests
+uv run pytest -k "test_api"     # Tests matching pattern
+uv run pytest -m "not slow"     # Exclude slow tests  
+uv run pytest --lf              # Last failed tests only
+uv run pytest --ff              # Failed first, then others
+```
+
+### Coverage Integration
+```bash
+uv add --dev pytest-cov
+uv run pytest --cov=src --cov-report=html
+uv run pytest --cov=src --cov-report=term-missing
+```
+
+## Decision Matrix
+
+| Scenario | Command/Pattern | Rationale |
+|----------|----------------|-----------|
+| Quick test | `uv run pytest -x` | Stop on first failure |
+| CI/CD | `uv run pytest --tb=short` | Clean output format |
+| Development | `uv run pytest -v --tb=long` | Detailed information |
+| Coverage | `uv run pytest --cov=src` | Code coverage analysis |
+| Specific tests | `uv run pytest -k "pattern"` | Filter tests by name |
+
+## Markers and Organization
+
+### Built-in Markers
+```python
+@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.skipif(sys.platform == "win32", reason="Unix only")
+@pytest.mark.xfail(reason="Known issue")
+@pytest.mark.parametrize("param", [1, 2, 3])
+```
+
+### Custom Markers
+```python
+# Register in pyproject.toml
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow",
+    "integration: integration tests",
+    "unit: unit tests",
+]
+
+# Usage
+@pytest.mark.slow
+def test_slow_operation():
+    pass
+```
+
+## Anti-Patterns
+
+### AVOID
+- Tests without assertions
+- Overly complex fixtures
+- Hard-coded test data in test functions
+- Testing implementation details instead of behavior
+
+### FORBIDDEN
+- Modifying global state without cleanup
+- Tests that depend on execution order
+- Production code imports in conftest.py

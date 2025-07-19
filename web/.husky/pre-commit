@@ -1,0 +1,40 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+files=$(git diff --cached --name-only)
+
+api_modified=false
+web_modified=false
+
+for file in $files
+do
+  case "$file" in
+    api/*.py)
+      api_modified=true
+      ;;
+    web/*)
+      web_modified=true
+      ;;
+  esac
+done
+
+if $api_modified; then
+  echo "Running Ruff linter on api module"
+
+  uv run --project api --dev ruff check --fix ./api
+  uv run --project api --dev ruff check ./api || status=$?
+  status=${status:-0}
+
+  if [ $status -ne 0 ]; then
+    echo "Ruff linter on api module error, exit code: $status"
+    echo "Please run 'uv run ruff check --fix ./api' to auto-fix issues."
+    exit 1
+  fi
+fi
+
+if $web_modified; then
+  echo "Running ESLint on web module"
+  cd ./web || exit 1
+  pnpm lint-staged || exit 1
+  cd ../
+fi

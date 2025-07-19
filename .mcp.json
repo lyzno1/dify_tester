@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+      "puppeteer": {
+        "type": "stdio",
+        "command": "npx",
+        "args": ["@modelcontextprotocol/server-puppeteer"],
+        "env": {}
+      },
+      "context7": {
+        "type": "http",
+        "url": "https://mcp.context7.com/mcp"
+      },
+      "sequential-thinking": {
+        "type": "stdio",
+        "command": "npx",
+        "args": ["@modelcontextprotocol/server-sequential-thinking"],
+        "env": {}
+      }
+    }
+  }

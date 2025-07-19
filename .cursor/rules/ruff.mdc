@@ -1,0 +1,90 @@
+---
+description: Read when choosing between ruff and legacy linting/formatting tools or configuring code quality workflows.
+alwaysApply: false
+---
+# Ruff Linter and Formatter Rules
+
+## Command Classification
+
+### Core Commands
+- `uv run ruff check` - Lint code for errors and style violations
+- `uv run ruff format` - Format code (Black-compatible)
+- `uv run ruff check --fix` - Auto-fix linting issues
+
+### Workflow Commands
+- `uv run ruff check .` - Lint entire project
+- `uv run ruff format .` - Format entire project
+- `uv run ruff check --diff` - Show proposed changes without applying
+
+## Tool Replacement
+
+Ruff replaces: Flake8, Black, isort, pyupgrade, autoflake, pydocstyle
+
+**Legacy Stack (DEPRECATED):**
+```bash
+black . && isort . && flake8 .
+```
+
+**Modern Stack:**
+```bash
+uv run ruff format . && uv run ruff check .
+```
+
+## Configuration
+
+### Essential pyproject.toml
+```toml
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+```
+
+## Essential Workflows
+
+### Project Setup
+```bash
+uv add --dev ruff
+uv run ruff check .           # Lint project
+uv run ruff format .          # Format project
+uv run ruff check --fix .     # Auto-fix issues
+```
+
+### CI/CD
+```bash
+uv run ruff check .
+uv run ruff format --check .
+```
+
+### Pre-commit
+```yaml
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.1.0
+  hooks:
+    - id: ruff
+      args: [--fix]
+    - id: ruff-format
+```
+
+## Decision Matrix
+
+| Scenario | Command | Rationale |
+|----------|---------|-----------|
+| New project | `uv run ruff check` + `format` | Single tool replacement |
+| Quick fix | `uv run ruff check --fix .` | Auto-repair issues |
+| CI/CD | `uv run ruff format --check .` | Verify formatting |
+| Development | `uv run ruff check .` | Regular linting |
+
+## Anti-Patterns
+
+### AVOID
+- Running Black/isort alongside ruff
+- Multiple formatting tools in same project
+- Manual import sorting when using ruff
+
+### FORBIDDEN
+- Using ruff with flake8 simultaneously
+- Mixing ruff format with Black
