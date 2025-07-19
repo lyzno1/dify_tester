@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Available Rules
 All rules are in `.cursor/rules/` directory:
+- **workflow.mdc**: Three-document workflow for feature development (REQUIRED FIRST)
 - **uv.mdc**: Package management (pnpm/uv commands)
 - **ruff.mdc**: Python linting/formatting (replaces Black/Flake8)
 - **pytest.mdc**: Backend testing framework
@@ -22,6 +23,12 @@ This is a full-stack Dify API testing application with a modern monorepo structu
 - **Frontend**: Next.js 15.4.2 (App Router) + React 19.1.0 + TypeScript + Tailwind CSS 4.x + Jest
 - **Backend**: FastAPI + Python 3.11-3.12 + httpx for Dify API integration
 - **Package Management**: pnpm (frontend) + uv (backend)
+
+## 📁 Three-Document Workflow Location
+
+All workflow documents (`requirements.md`, `design.md`, `todo.md`) must be placed under:
+.development/<branch-type>/<feature-name>/
+Example: `.development/feat/dify/requirements.md`
 
 ## Directory Structure
 
@@ -143,6 +150,11 @@ module.exports = createJestConfig(customJestConfig)
 - **Code quality**: Use `ruff` for Python, ESLint/Prettier for TypeScript
 - **Commits**: Follow `git_commit.mdc` format
 
+### Rule-Based AI Execution Guidance
+- ✅ Claude or any AI agent must follow `workflow.mdc` before writing any code
+- ✅ Use `requirements.md` → `design.md` → `todo.md` in order
+- ✅ Always update all three documents when working on a feature
+
 ## Validation Commands
 
 ```bash
@@ -158,5 +170,24 @@ uv run pytest               # Backend tests
 
 # Full validation
 pnpm test:ci                # Frontend CI tests
-uv run pytest --cov=src     # Backend tests with coverage
 ```
+
+### ✅ MUST
+
+* All rules marked as CRITICAL or STANDARD must be followed
+* Rule file dependencies must be resolved before any action
+* Validation commands must pass before commits or PRs
+* All comments must be in English
+
+## ❌ MUST NOT
+
+* Skip rule consultation or file-level reading
+* Modify or bypass pyproject.toml manually
+* Mix legacy tools (e.g. pip + flake8 + black) with uv + ruff
+* Use non-conventional or vague commit messages (see `git_commit.mdc`)
+
+### ⚠️ SHOULD
+
+* Document any temporary rule deviations with justification
+* Keep rules updated as tools evolve
+* Promote rule clarity for both human and agent usage

@@ -24,34 +24,39 @@ alwaysApply: true
 
 ### Core Development Rules (**CRITICAL**)
 
+- **RULE FILE: workflow.mdc**  
+  MUST read before any feature development or planning task  
+  *Dependencies*: None  
+  *Enforcement*: Must use three-document workflow (requirements→design→tasks)
+
 - **RULE FILE: uv.mdc**  
   MUST read before any package management, dependency installation, or project setup  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: All package operations must use `uv` commands only
 
 - **RULE FILE: ruff.mdc**  
   MUST read when linting, formatting, or configuring code quality workflows  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: Ruff replaces all legacy formatting/linting tools
 
 - **RULE FILE: pytest.mdc**  
   MUST read when writing, organizing, or running tests  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: pytest structure, execution, and markers required
 
 - **RULE FILE: fastapi.mdc**  
   MUST read when building FastAPI applications or APIs  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: Must follow FastAPI async/service separation conventions
 
 - **RULE FILE: git_commit.mdc**  
   MUST read when writing or reviewing Git commit messages  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: Commit messages must follow Conventional Commits format
 
 - **RULE FILE: jest.mdc**  
   MUST read when configuring Jest testing framework, writing frontend tests, or organizing test suites for Next.js/React applications  
-  *Dependencies*: None  
+  *Dependencies*: `workflow.mdc`  
   *Enforcement*: Jest configuration, component testing, and React testing patterns required
 
 ---
@@ -60,8 +65,9 @@ alwaysApply: true
 
 ```
 
-uv.mdc (ROOT)
-├── ruff.mdc     # Independent
+workflow.mdc (ROOT)
+├── uv.mdc     # Independent
+├── ruff.mdc   # Independent
 ├── pytest.mdc   # Independent
 ├── fastapi.mdc  # Independent
 ├── git_commit.mdc  # Independent
