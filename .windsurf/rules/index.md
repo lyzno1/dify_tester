@@ -49,6 +49,11 @@ trigger: always_on
   *Dependencies*: None  
   *Enforcement*: Commit messages must follow Conventional Commits format
 
+- **RULE FILE: jest.mdc**  
+  MUST read when configuring Jest testing framework, writing frontend tests, or organizing test suites for Next.js/React applications  
+  *Dependencies*: None  
+  *Enforcement*: Jest configuration, component testing, and React testing patterns required
+
 ---
 
 ## 🔄 Rule Dependencies
@@ -59,7 +64,8 @@ uv.mdc (ROOT)
 ├── ruff.mdc     # Independent
 ├── pytest.mdc   # Independent
 ├── fastapi.mdc  # Independent
-└── git_commit.mdc  # Independent
+├── git_commit.mdc  # Independent
+└── jest.mdc     # Independent
 
 ````
 
@@ -75,22 +81,26 @@ All rules may be composed. No internal dependency restrictions.
 3. `pytest.mdc` – For any testing activity
 4. `fastapi.mdc` – When building APIs or services
 5. `git_commit.mdc` – Before committing any changes
+6. `jest.mdc` – When configuring frontend testing or writing Jest tests
 
 ### ✅ Domain-Specific Tasks
 | Task | Required Rules |
 |------|----------------|
 | Package management | `uv.mdc` |
 | Code quality & formatting | `ruff.mdc` |
-| Test authoring & execution | `pytest.mdc` |
+| Backend testing | `pytest.mdc` |
+| Frontend testing | `jest.mdc` |
 | API/server development | `fastapi.mdc` |
 | Git commit writing | `git_commit.mdc` |
 
 ### 🔁 Cross-Domain Tasks
 | Task | Combined Rules |
 |------|----------------|
-| New project setup | `uv` + `ruff` + `pytest` + `fastapi` + `git_commit` |
+| New project setup | `uv` + `ruff` + `pytest` + `fastapi` + `git_commit` + `jest` |
 | API with tests | `fastapi` + `pytest` + `ruff` + `git_commit` |
-| CI pipeline | `uv` + `ruff` + `pytest` + `git_commit` |
+| Frontend with tests | `jest` + `git_commit` |
+| Full-stack testing | `jest` + `pytest` + `ruff` + `git_commit` |
+| CI pipeline | `uv` + `ruff` + `pytest` + `jest` + `git_commit` |
 | Dependency update with validation | `uv` + `ruff` + `git_commit` |
 
 ---
@@ -131,6 +141,7 @@ npx commitlint --from=HEAD~5
 * All rules marked as CRITICAL or STANDARD must be followed
 * Rule file dependencies must be resolved before any action
 * Validation commands must pass before commits or PRs
+* All comments must be in English
 
 ### ❌ MUST NOT
 
@@ -144,4 +155,3 @@ npx commitlint --from=HEAD~5
 * Document any temporary rule deviations with justification
 * Keep rules updated as tools evolve
 * Promote rule clarity for both human and agent usage
-
