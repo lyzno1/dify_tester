@@ -14,3 +14,11 @@ wheels/
 
 # development
 .development
+
+# env
+.env
+.env.*
+!.env.example
+
+# mcp json file (it contains the github personal access token)
+.mcp.json
