@@ -27,8 +27,15 @@ This is a full-stack Dify API testing application with a modern monorepo structu
 ## 📁 Three-Document Workflow Location
 
 All workflow documents (`requirements.md`, `design.md`, `todo.md`) must be placed under:
-.development/<branch-type>/<feature-name>/
-Example: `.development/feat/dify/requirements.md`
+.development/<branch-type>/<feature-name>/ 
+(please use "git branch" cmd to get <branch-type>/<feature-name>)
+
+### ✋ Human-in-the-Loop Rule
+After generating each of the three documents (`requirements.md`, `design.md`, `todo.md`), the system **must pause and ask the user to confirm, review, or revise** before proceeding to the next one.
+
+- Do not auto-generate the next document without explicit user approval.
+- Ask: "✅ requirements.md completed. Do you want to proceed to design.md?"
+- Only continue if the user confirms.
 
 ## Directory Structure
 

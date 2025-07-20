@@ -1,7 +1,5 @@
 ---
 trigger: always_on
-description:
-globs:
 ---
 
 # Three-Document Workflow
@@ -9,7 +7,8 @@ globs:
 ## 🎯 Workflow Purpose
 Use three structured documents to plan, design, and execute any feature development while maintaining traceability and consistency.
 
-All three documents must be placed in `.development/<type>/<name>/` (e.g. `.development/feat/dify/`).
+All three documents must be placed in `.development/<branch-type>/<feature-name>/`
+(please use "git branch" cmd to get <branch-type>/<feature-name>)
 
 ## 📁 Document Roles
 
@@ -104,6 +103,13 @@ Requirements → Design → Tasks → Execution → Updates
 2. Update `design.md` - adjust design for changes
 3. Update `todo.md` - add new tasks, mark completed
 4. Ensure consistency - keep all three aligned
+
+### ✋ Human-in-the-Loop Rule
+After generating each of the three documents (`requirements.md`, `design.md`, `todo.md`), the system **must pause and ask the user to confirm, review, or revise** before proceeding to the next one.
+
+- Do not auto-generate the next document without explicit user approval.
+- Ask: "✅ requirements.md completed. Do you want to proceed to design.md?"
+- Only continue if the user confirms.
 
 ## 📊 Document Maintenance
 
